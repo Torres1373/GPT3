@@ -1,0 +1,81 @@
+prompt,completion
+Fetch unique values of DEPARTMENT from Worker table.,Select distinct DEPARTMENT from Worker;
+Get all details of workers who have top 5 salaries.,Select * from Worker where SALARY in (Select distinct top 5 SALARY from Worker order by SALARY desc
+Display the highest salary from the Worker table.,Select max(Salary) from Worker;
+Fetch the count of employees working in the department Admin.,SELECT COUNT(*) FROM worker WHERE DEPARTMENT = 'Admin';
+Get all details of the Workers whose SALARY lies between 5000 and 10000.,Select * from Worker where SALARY between 5000 and 10000;
+Fetch the count of employees working in the department Admin.,SELECT COUNT(*) FROM worker WHERE DEPARTMENT = 'Admin';
+Print the first three characters of FIRST_NAME from Worker table.,"Select substring(FIRST_NAME,1,3) from Worker;"
+select all available columns from users table,"SELECT id, signup_dt, email, plan_type FROM users"
+select all available columns from charges table,"SELECT amount, user_id, and charge_dt FROM charges"
+what was the largest payment amount made in the past 30 days?,SELECT MAX(amount) FROM charges WHERE charge_dt > NOW() - INTERVAL '30 days'
+when did jane@seekwell.io make her first payment?,SELECT MIN(charge_dt) as last_payment_dt from charges LEFT JOIN users ON users.id = charges.user_id WHERE users.email = 'jane@seekwell.io'
+how many new users signed up in each of the last 2 months?,"SELECT sum(case when signup_dt>= now() - interval '1 month' then 1 else 0 end) as signups_this_month, sum(case when signup_dt>= now() - interval '2 months' and signup_dt < now() - interval '1 month'  then 1 else 0 end) as signups_last_month FROM users"
+what percent of users have an email ending in 'gmail.com'?,SELECT SUM(CASE WHEN email like '%gmail.com' then 1 else 0 end)/COUNT(*) as percent_gmail FROM users
+How many heads of the departments are older than 56 ?,SELECT count(*) FROM head WHERE age  >  56
+"List the name, born state and age of the heads of departments ordered by age.","SELECT name ,  born_state ,  age FROM head ORDER BY age"
+"List the creation year, name and budget of each department.","SELECT creation ,  name ,  budget_in_billions FROM department"
+What are the maximum and minimum budget of the departments?,"SELECT max(budget_in_billions) ,  min(budget_in_billions) FROM department"
+What is the average number of employees of the departments whose rank is between 10 and 15?,SELECT avg(num_employees) FROM department WHERE ranking BETWEEN 10 AND 15
+What are the names of the heads who are born outside the California state?,SELECT name FROM head WHERE born_state != 'California'
+What are the distinct creation years of the departments managed by a secretary born in state 'Alabama'?,SELECT DISTINCT T1.creation FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id JOIN head AS T3 ON T2.head_id  =  T3.head_id WHERE T3.born_state  =  'Alabama'
+What are the names of the states where at least 3 heads were born?,SELECT born_state FROM head GROUP BY born_state HAVING count(*)  >=  3
+In which year were most departments established?,SELECT creation FROM department GROUP BY creation ORDER BY count(*) DESC LIMIT 1
+Show the name and number of employees for the departments managed by heads whose temporary acting value is 'Yes'?,"SELECT T1.name ,  T1.num_employees FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id WHERE T2.temporary_acting  =  'Yes'"
+How many acting statuses are there?,SELECT count(DISTINCT temporary_acting) FROM management
+How many departments are led by heads who are not mentioned?,SELECT count(*) FROM department WHERE department_id NOT IN (SELECT department_id FROM management);
+What are the distinct ages of the heads who are acting?,SELECT DISTINCT T1.age FROM management AS T2 JOIN head AS T1 ON T1.head_id  =  T2.head_id WHERE T2.temporary_acting  =  'Yes'
+List the states where both the secretary of 'Treasury' department and the secretary of 'Homeland Security' were born.,SELECT T3.born_state FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id JOIN head AS T3 ON T2.head_id  =  T3.head_id WHERE T1.name  =  'Treasury' INTERSECT SELECT T3.born_state FROM department AS T1 JOIN management AS T2 ON T1.department_id  =  T2.department_id JOIN head AS T3 ON T2.head_id  =  T3.head_id WHERE T1.name  =  'Homeland Security'
+"Which department has more than 1 head at a time? List the id, name and the number of heads.","SELECT T1.department_id ,  T1.name ,  count(*) FROM management AS T2 JOIN department AS T1 ON T1.department_id  =  T2.department_id GROUP BY T1.department_id HAVING count(*)  >  1"
+Which head's name has the substring 'Ha'? List the id and name.,"SELECT head_id ,  name FROM head WHERE name LIKE '%Ha%'"
+How many farms are there?,SELECT count(*) FROM farm
+Count the number of farms.,SELECT count(*) FROM farm
+Who is the youngest male?,SELECT name FROM Person WHERE gender  =  'male' AND age  =  (SELECT min(age) FROM person WHERE gender  =  'male' )
+What is the name of the youngest male?,SELECT name FROM Person WHERE gender  =  'male' AND age  =  (SELECT min(age) FROM person WHERE gender  =  'male' )
+How old is the doctor named Zach?,SELECT age FROM Person WHERE job  =  'doctor' AND name  =  'Zach'
+What is the age of the doctor named Zach?,SELECT age FROM Person WHERE job  =  'doctor' AND name  =  'Zach'
+Who is the person whose age is below 30?,SELECT name FROM Person WHERE age  <  30
+What is the name of the person whose age is below 30?,SELECT name FROM Person WHERE age  <  30
+How many people whose age is greater 30 and job is engineer?,SELECT count(*) FROM Person WHERE age  >  30 AND job  =  'engineer'
+How many engineers are older than 30?,SELECT count(*) FROM Person WHERE age  >  30 AND job  =  'engineer'
+What is the average age for each gender?,"SELECT avg(age) ,  gender FROM Person GROUP BY gender"
+"How old is each gender, on average?","SELECT avg(age) ,  gender FROM Person GROUP BY gender"
+What is average age for different job title?,"SELECT avg(age) ,  job FROM Person GROUP BY job"
+How old is the average person for each job?,"SELECT avg(age) ,  job FROM Person GROUP BY job"
+What is average age of male for different job title?,"SELECT avg(age) ,  job FROM Person WHERE gender  =  'male' GROUP BY job"
+What is the average age for a male in each job?,"SELECT avg(age) ,  job FROM Person WHERE gender  =  'male' GROUP BY job"
+What is minimum age for different job title?,"SELECT min(age) ,  job FROM Person GROUP BY job"
+How old is the youngest person for each job?,"SELECT min(age) ,  job FROM Person GROUP BY job"
+Find the number of people who is under 40 for each gender.,"SELECT count(*) ,  gender FROM Person WHERE age  <  40 GROUP BY gender"
+How many people are under 40 for each gender?,"SELECT count(*) ,  gender FROM Person WHERE age  <  40 GROUP BY gender"
+"Who is performing in the back stage position for the song \""Der Kapitan\""? Show the first name and last name.","SELECT T2.firstname ,  T2.lastname FROM Performance AS T1 JOIN Band AS T2 ON T1.bandmate  =  T2.id JOIN Songs AS T3 ON T3.SongId  =  T1.SongId WHERE T3.Title  =  \""Der Kapitan\"" AND T1.StagePosition  =  \""back\"""
+"What is the first and last name of the artist who performed back stage for the song \""Der Kapitan\""?","SELECT T2.firstname ,  T2.lastname FROM Performance AS T1 JOIN Band AS T2 ON T1.bandmate  =  T2.id JOIN Songs AS T3 ON T3.SongId  =  T1.SongId WHERE T3.Title  =  \""Der Kapitan\"" AND T1.StagePosition  =  \""back\"""
+Find the name of songs that does not have a back vocal.,"SELECT DISTINCT title FROM vocals AS t1 JOIN songs AS t2 ON t1.songid  =  t2.songid EXCEPT SELECT t2.title FROM vocals AS t1 JOIN songs AS t2 ON t1.songid  =  t2.songid WHERE TYPE  =  \""back\"""
+What are the names of the songs that do not have back vocals?,"SELECT DISTINCT title FROM vocals AS t1 JOIN songs AS t2 ON t1.songid  =  t2.songid EXCEPT SELECT t2.title FROM vocals AS t1 JOIN songs AS t2 ON t1.songid  =  t2.songid WHERE TYPE  =  \""back\"""
+"What are the songs in album \""A Kiss Before You Go: Live in Hamburg\""?","SELECT T3.title FROM albums AS T1 JOIN tracklists AS T2 ON T1.aid  =  T2.albumid JOIN songs AS T3 ON T2.songid  =  T3.songid WHERE T1.title  =  \""A Kiss Before You Go: Live in Hamburg\"""
+"What are the song titles on the album \""A Kiss Before You Go: Live in Hamburg\""?","SELECT T3.title FROM albums AS T1 JOIN tracklists AS T2 ON T1.aid  =  T2.albumid JOIN songs AS T3 ON T2.songid  =  T3.songid WHERE T1.title  =  \""A Kiss Before You Go: Live in Hamburg\"""
+"What are all the songs in albums under label \""Universal Music Group\""?","SELECT T3.title FROM albums AS T1 JOIN tracklists AS T2 ON T1.aid  =  T2.albumid JOIN songs AS T3 ON T2.songid  =  T3.songid WHERE t1.label  =  \""Universal Music Group\"""
+"What are the names of all the songs whose album is under the label of \""Universal Music Group\""?","SELECT T3.title FROM albums AS T1 JOIN tracklists AS T2 ON T1.aid  =  T2.albumid JOIN songs AS T3 ON T2.songid  =  T3.songid WHERE t1.label  =  \""Universal Music Group\"""
+Find the number of songs in all the studio albums.,"SELECT count(DISTINCT T3.title) FROM albums AS T1 JOIN tracklists AS T2 ON T1.aid  =  T2.albumid JOIN songs AS T3 ON T2.songid  =  T3.songid WHERE t1.type  =  \""Studio\"""
+How many songs appear in studio albums?,"SELECT count(DISTINCT T3.title) FROM albums AS T1 JOIN tracklists AS T2 ON T1.aid  =  T2.albumid JOIN songs AS T3 ON T2.songid  =  T3.songid WHERE t1.type  =  \""Studio\"""
+Who is the founder of Sony?,SELECT founder FROM manufacturers WHERE name  =  'Sony'
+Where is the headquarter of the company founded by James?,SELECT headquarter FROM manufacturers WHERE founder  =  'James
+"Find all manufacturers' names and their headquarters, sorted by the ones with highest revenue first.","SELECT name ,  headquarter FROM manufacturers ORDER BY revenue DESC"
+"What are the average, maximum and total revenues of all companies?","SELECT avg(revenue) ,  max(revenue) ,  sum(revenue) FROM manufacturers"
+What is Mark Zuckerberg's salary?,SELECT Salary FROM Compesation WHERE Name = 'Mark Zuckerberg'
+Who makes less than 100k base in software engieneering department?,Select Name FROM Compesation WHERE Department = 'Software Engieneering' AND Base Salary < 100000
+Total stock award given out to people in data science hired after 2000,SELECT SUM(Stock Awards) FROM Compesation WHERE Department = 'Data Science' AND Hiring Date > 2000-01-01
+What is Mark Zuckerberg's salary?,SELECT Base Salary FROM Compesation c JOIN Employees e ON c.EmployeeId = e.Employee.Id WHERE e.FirstName = 'Mark' AND e.LastName = 'Zuckerberg'
+For which countries are there more than four distinct addresses listed?,SELECT country FROM addresses GROUP BY country HAVING count(address_id)  >  4
+List all the contact channel codes that were used less than 5 times.,SELECT channel_code FROM customer_contact_channels GROUP BY channel_code HAVING count(customer_id)  <  5
+"Which contact channel has been used by the customer with name \""Tillman Ernser\""?","SELECT DISTINCT channel_code FROM customers AS t1 JOIN customer_contact_channels AS t2 ON t1.customer_id  =  t2.customer_id WHERE t1.customer_name  =  \""Tillman Ernser\"""
+"Find the contact channel code that was used by the customer named \""Tillman Ernser\"".","SELECT DISTINCT channel_code FROM customers AS t1 JOIN customer_contact_channels AS t2 ON t1.customer_id  =  t2.customer_id WHERE t1.customer_name  =  \""Tillman Ernser\"""
+"What is the \""active to date\"" of the latest contact channel used by \""Tillman Ernser\""?","SELECT max(t2.active_to_date) FROM customers AS t1 JOIN customer_contact_channels AS t2 ON t1.customer_id  =  t2.customer_id WHERE t1.customer_name  =  \""Tillman Ernser\"""
+What is the average time span of contact channels in the database?,SELECT avg(active_to_date - active_from_date) FROM customer_contact_channels
+What is the channel code and contact number of the customer contact channel that was active for the longest time?,"SELECT channel_code ,  contact_number FROM customer_contact_channels WHERE active_to_date - active_from_date  =  (SELECT active_to_date - active_from_date FROM customer_contact_channels ORDER BY (active_to_date - active_from_date) DESC LIMIT 1)"
+Find the name and active date of the customer that use email as the contact channel.,"SELECT t1.customer_name ,  t2.active_from_date FROM customers AS t1 JOIN customer_contact_channels AS t2 ON t1.customer_id  =  t2.customer_id WHERE t2.channel_code  =  'Email'"
+What is the name of the customer that made the order with the largest quantity?,SELECT t1.customer_name FROM customers AS t1 JOIN customer_orders AS t2 ON t1.customer_id  =  t2.customer_id JOIN order_items AS t3 ON t2.order_id  =  t3.order_id WHERE t3.order_quantity  =  ( SELECT max(order_quantity) FROM order_items)
+What is the name of the customer that has purchased the most items?,SELECT t1.customer_name FROM customers AS t1 JOIN customer_orders AS t2 ON t1.customer_id  =  t2.customer_id JOIN order_items AS t3 ON t2.order_id  =  t3.order_id GROUP BY t1.customer_name ORDER BY sum(t3.order_quantity) DESC LIMIT 1
+What is the payment method of the customer that has purchased the least quantity of items?,SELECT t1.payment_method FROM customers AS t1 JOIN customer_orders AS t2 ON t1.customer_id  =  t2.customer_id JOIN order_items AS t3 ON t2.order_id  =  t3.order_id GROUP BY t1.customer_name ORDER BY sum(t3.order_quantity) LIMIT 1
+How many types of products have Rodrick Heaney bought in total?,"SELECT count(DISTINCT t3.product_id) FROM customers AS t1 JOIN customer_orders AS t2 ON t1.customer_id  =  t2.customer_id JOIN order_items AS t3 ON t2.order_id  =  t3.order_id WHERE t1.customer_name  =  \""Rodrick Heaney\"""
+"How many customers have at least one order with status \""Cancelled\""?","SELECT count(DISTINCT customer_id) FROM customer_orders WHERE order_status  =  \""Cancelled\"""
